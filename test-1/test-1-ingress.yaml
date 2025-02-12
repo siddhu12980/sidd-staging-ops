@@ -5,9 +5,10 @@ metadata:
   namespace: default
 spec:
   rules:
-  - http:
+  - host: test1.100xsidd.me
+    http:
       paths:
-      - path: /test
+      - path: /
         pathType: Prefix
         backend:
           service:
