@@ -6,7 +6,7 @@ spec:
   selector:
     app: test-1
 
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - port: 8080
     protocol: TCP
@@ -30,6 +30,7 @@ spec:
       containers:
       - name: test-1
         image: siddjuugi/http-test-1
+        imagePullPolicy: Always
         resources:
           limits:
             memory: "512Mi"
