@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: test-1
-        image: nanajanashia/argocd-app:1.2
+        image: siddjuugi/http-test-1
         resources:
           limits:
             memory: "512Mi"
