@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: test-1-ingress
 spec:
+
   rules:
   - http:
       paths:
@@ -13,3 +14,4 @@ spec:
             name: whoami
             port:
               name: web
+
