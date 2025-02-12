@@ -26,3 +26,4 @@ spec:
     middlewares:
     - name: test-1-stripprefix
       namespace: traefik-v2
+
