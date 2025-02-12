@@ -1,15 +1,25 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
-  name: test-1-ingress
+  name: test-1-ingressroute
 spec:
-  rules:
-  - http:
-      paths:
-      - path: /test
-        pathType: Prefix
-        backend:
-          service:
-            name: test-1-service
-            port:
-              number: 8080
+  entryPoints:
+  - web
+  routes:
+  - match: PathPrefix(`/test`)
+    kind: Rule
+    middlewares:
+    - name: test-1-stripprefix
+    services:
+    - name: test-1-service
+      port: 8080
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: test-1-stripprefix
+spec:
+  stripPrefix:
+    prefixes:
+    - "/test"
