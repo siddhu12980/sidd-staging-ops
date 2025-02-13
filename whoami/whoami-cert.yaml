@@ -1,0 +1,11 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: whoami-tls
+spec:
+  secretName: whoami-tls-secret
+  dnsNames:
+  - whoami.100xsidd.me
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

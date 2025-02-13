@@ -1,0 +1,37 @@
+additionalArguments:
+- --providers.kubernetescrd
+- --entrypoints.websecure.address=:443
+- --entrypoints.web.address=:80
+
+ports:
+  web:
+    port: 80
+    expose:
+      ip: []
+    exposedPort: 80
+    protocol: TCP
+  websecure:
+    port: 443
+    expose:
+      ip: []
+    exposedPort: 443
+    protocol: TCP
+
+service:
+  type: LoadBalancer
+  annotations: {}
+
+ingressRoute:
+  dashboard:
+    enabled: true
+
+# Enable CRDs
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+
+# Enable dashboard
+dashboard:
+  enabled: true
+
+# helm upgrade traefik traefik/traefik -f trafik-setup-config/traefik-values.yaml -n traefik-v2
