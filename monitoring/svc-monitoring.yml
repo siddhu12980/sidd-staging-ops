@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: http-server-monitor
+  namespace: default
+  labels:
+    release: kps # matches kube-prometheus-stack release label for prometheus to discover this servicemonitor
+spec:
+  selector:
+    matchLabels:
+      app: http-server-1
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 10s
