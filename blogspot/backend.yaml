@@ -27,7 +27,11 @@ spec:
       containers:
       - name: blogspot-server
         image: siddjuugi/medium-app:latest
+        imagePullPolicy: Always
         env:
+        - name: HOSTNAME
+          value: "0.0.0.0"
+
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:

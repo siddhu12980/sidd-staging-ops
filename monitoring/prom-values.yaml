@@ -5,6 +5,21 @@ prometheus:
     serviceMonitorNamespaceSelector: {}
 
 grafana:
+  enabled: true
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.tls: "true"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    hosts:
+    - grafana.100xsidd.me
+    tls:
+    - secretName: grafana-tls-secret
+      hosts:
+      - grafana.100xsidd.me
+
   sidecar:
     datasources:
       defaultDatasourceEnabled: true

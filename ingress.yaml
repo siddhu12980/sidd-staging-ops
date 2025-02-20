@@ -4,8 +4,9 @@ metadata:
   name: test-1-ingress
   annotations:
     kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: traefik-v2-redirect-https@kubernetescrd
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
@@ -15,6 +16,13 @@ spec:
   - secretName: whoami-tls-secret
     hosts:
     - whoami.100xsidd.me
+  - secretName: grafana-tls-secret
+    hosts:
+    - grafana.100xsidd.me
+  - secretName: blogspot-tls-secret
+    hosts:
+    - api.blogspot.100xsidd.me
+
   rules:
   - host: test1.100xsidd.me
     http:
@@ -37,3 +45,36 @@ spec:
             name: whoami
             port:
               name: web
+
+  - host: grafana.100xsidd.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana-proxy
+            port:
+              name: http2
+
+  - host: api.blogspot.100xsidd.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: blogspot-server-service
+            port:
+              number: 3010
+
+  - host: chain.100xsidd.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: fast-chain-service
+            port:
+              number: 3005
