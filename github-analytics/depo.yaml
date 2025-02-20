@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: github-analytics-service
+spec:
+  selector:
+    app: github-analytics
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-analytics-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-analytics
+  template:
+    metadata:
+      labels:
+        app: github-analytics
+    spec:
+      containers:
+      - name: github-analytics
+        image: siddjuugi/fastapi-github:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
