@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: syncstream-service
+  labels:
+    app: syncstream
+spec:
+  selector:
+    app: syncstream
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syncstream-deployment
+  labels:
+    app: syncstream
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: syncstream
+  template:
+    metadata:
+      labels:
+        app: syncstream
+    spec:
+      containers:
+        - name: syncstream
+          image: syncstream-image
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              value: postgresql://syncstream:syncstream@db-service:5432/syncstream
+            - name: REDIS_HOST
+              value: syncstream-redis-service
+            - name: CELERY_BROKER_URL
+              value: redis://syncstream-redis-service:6379/0
+            - name: CELERY_RESULT_BACKEND
+              value: redis://syncstream-redis-service:6379/1
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: syncstream-secrets
+                  key: JWT_SECRET
+            - name: JWT_ALGORITHM
+              valueFrom:
+                secretKeyRef:
+                  name: syncstream-secrets
+                  key: JWT_ALGORITHM
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: syncstream-secrets
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: syncstream-secrets
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_DEFAULT_REGION
+              value: ap-south-1
+            - name: AWS_REGION
+              value: ap-south-1
+            - name: S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: syncstream-secrets
+                  key: S3_BUCKET
+            
+              
