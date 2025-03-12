@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: syncstream-service
+  name: syncstream-server-service
   labels:
-    app: syncstream
+    app: syncstream-server
 spec:
   selector:
-    app: syncstream
+    app: syncstream-server
   ports:
     - protocol: TCP
       port: 8000
@@ -15,33 +15,33 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: syncstream-deployment
+  name: syncstream-server-deployment
   labels:
-    app: syncstream
+    app: syncstream-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: syncstream
+      app: syncstream-server
   template:
     metadata:
       labels:
-        app: syncstream
+        app: syncstream-server
     spec:
       containers:
-        - name: syncstream
-          image: syncstream-image
+        - name: syncstream-server
+          image: siddjuugi/sync-stream-server:latest
           ports:
             - containerPort: 8000
           env:
             - name: DATABASE_URL
-              value: postgresql://syncstream:syncstream@db-service:5432/syncstream
+              value: postgresql://syncstream:syncstream@syncstream-db-service.default:5432/syncstream
             - name: REDIS_HOST
-              value: syncstream-redis-service
+              value: syncstream-redis-service.default
             - name: CELERY_BROKER_URL
-              value: redis://syncstream-redis-service:6379/0
+              value: redis://syncstream-redis-service.default:6379/0
             - name: CELERY_RESULT_BACKEND
-              value: redis://syncstream-redis-service:6379/1
+              value: redis://syncstream-redis-service.default:6379/1
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:

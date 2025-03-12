@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: db-service
+  name: syncstream-db-service
   labels:
     app: syncstream-db
 spec:
@@ -12,21 +12,10 @@ spec:
       port: 5432
       targetPort: 5432
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db-deployment
+  name: syncstream-db-deployment
   labels:
     app: syncstream-db
 spec:
@@ -39,10 +28,6 @@ spec:
       labels:
         app: syncstream-db
     spec:
-      volumes:
-        - name: postgres-storage
-          persistentVolumeClaim:
-            claimName: postgres-pvc
       containers:
         - name: db
           image: postgres:15
@@ -55,8 +40,4 @@ spec:
               value: syncstream
             - name: POSTGRES_DB
               value: syncstream
-            - name: POSTGRES_HOST
-              value: db-service
-          volumeMounts:
-            - name: postgres-storage
-              mountPath: /var/lib/postgresql/data
+

@@ -28,6 +28,11 @@ spec:
       - name: fast-chain
         image: siddjuugi/fast-chain:latest
         imagePullPolicy: Always
+        env:
+        - name: HOSTNAME
+          value: "0.0.0.0"
+        - name: PORT
+          value: "3005"
         ports:
         - containerPort: 3005
 

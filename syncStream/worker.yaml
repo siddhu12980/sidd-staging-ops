@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: syncstream-worker-service
   labels:
-    app: syncstream-worker-service
+    app: syncstream-worker
 spec:
   selector:
-    app: syncstream-worker-deployment
+    app: syncstream-worker
   ports:
     - protocol: TCP
       port: 3000
@@ -30,16 +30,16 @@ spec:
     spec:
       containers:
         - name: syncstream-worker
-          image: syncstream-worker-image
+          image: siddjuugi/sync-stream-worker:latest
           env:
             - name: DATABASE_URL
-              value: postgresql://syncstream:syncstream@db-service:5432/syncstream
+              value: postgresql://syncstream:syncstream@syncstream-db-service.default:5432/syncstream
             - name: REDIS_HOST
-              value: syncstream-redis-service
+              value: syncstream-redis-service.default
             - name: CELERY_BROKER_URL
-              value: redis://syncstream-redis-service:6379/0
+              value: redis://syncstream-redis-service.default:6379/0
             - name: CELERY_RESULT_BACKEND
-              value: redis://syncstream-redis-service:6379/1
+              value: redis://syncstream-redis-service.default:6379/1
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
